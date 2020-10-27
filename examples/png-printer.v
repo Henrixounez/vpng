@@ -4,6 +4,9 @@ import vpng
 import os
 import term
 
+// Png Printer
+// Read and print a png file on the terminal
+
 fn pixel_print_hd(x int, y int, png vpng.PngFile) {
 	if x >= png.width || y >= png.height {
 		return
@@ -62,9 +65,8 @@ fn main() {
 		return
 	}
 	filename := os.args[1]
-	png := vpng.parse(filename) or {
+	png := vpng.read(filename) or {
 		return
 	}
-	// low_res_print(png)
 	hi_res_print(png)
 }

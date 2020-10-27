@@ -6,25 +6,42 @@ Its **simple**, download the module and then you just have to do :
 ```v
 import vpng
 
-png_file := vpng.parse('image.png') or { return }
+png_file := vpng.read("image.png") or { return }
+vpng.write(png_file, "output.png")
 ```
+
+<br/>
+<hr/>
+<br/>
+
+## Tips
+
+<br/>
 
 To deal with the different kinds of `Pixel`, (cf: [Pixel Types](###pixel-types)) the prefered method is :
 ```v
 pixel := png_file.pixels[i]
 match pixel {
     vpng.Grayscale {
-
+        ...
     }
+    vpng.TrueColor {
+        ...
+    }
+    ...
+    ...
 }
 ```
 
+<br/>
+<hr/>
 <br/>
 
 ## Methods
 | Method | use |
 |-|-|
-| `.parse(filename string) ?PngFile` | Parses the given `filename` png file and returns an optional `PngFile`. |
+| `.read(filename string) ?PngFile` | Parses the given `filename` png file and returns an optional `PngFile`. |
+| `.write(png PngFile, filename string)` | Writes the given `PngFile` in the `filename` png file.
 
 <br/>
 
@@ -34,11 +51,13 @@ match pixel {
 - `PngFile`, Object returned by the `.parse` function. Contains all useful information about the parsed png file :
     ```v
     pub struct PngFile {
+        ihdr       IHDR
     pub:
         width      int          // Width of image
         height     int          // Height of image
-        pixels     []Pixel      // Pixels of image
-        pixel_type PixelType    // Pixel type
+        pixel_type PixelType    // Pixels type
+    pub mut:
+        pixels     []Pixel      // Modifiable pixel array
     }
     ```
 
@@ -100,6 +119,23 @@ match pixel {
         }
         ```
 
+<br/>
+<hr/>
+<br/>
+
+## Examples:
+- `png-printer.v`: Give it a `.png` file and it will print it for you in the terminal.
+- `redline.v`: Give it an input `.png` file and an output `.png` file. It will read the input, add a diagonal red line and write the result on the output file.
+
+### How to compile them from GitHub repository:
+```bash
+[vpng]$ v examples/png-printer.v -path "..|@vlib|@vmodules"
+```
+
+<br/>
+<hr/>
+<br/>
+
 ## Todo :
 - [ ] Handle all types of colors
     - [ ] Indexed
@@ -114,4 +150,8 @@ match pixel {
     - [ ] Invert colors
     - [ ] Change colors
     - [ ] ...
-- [ ] Write a png file (*Might be hard to have an optimized one*)
+- [x] Write a png file (*Might be hard to have an optimized one*)
+    - [ ] Optimize it
+    - [ ] Filter pixels lines
+    - [ ] Group IDAT in chunks
+    - [ ] Save metadata
