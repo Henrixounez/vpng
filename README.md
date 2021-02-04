@@ -145,11 +145,12 @@ match pixel {
     - [x] TrueColorAlpha
 - [ ] Functions to easily manipulate the pixels / image, for example :
     - [ ] Resize
-    - [ ] Rotate
+    - [x] Mirror
+    - [x] Rotate
     - [ ] Zoom
     - [ ] Slide
     - [ ] Crop
-    - [ ] Invert colors
+    - [x] Invert colors
     - [ ] Change colors
     - [ ] ...
 - [x] Write a png file (*Might be hard to have an optimized one*)
