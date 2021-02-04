@@ -23,5 +23,5 @@ fn main() {
 			255
 		}
 	}
-	vpng.write(png, os.args[2])
+	png.write(os.args[2])
 }

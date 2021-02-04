@@ -7,7 +7,7 @@ Its **simple**, download the module and then you just have to do :
 import vpng
 
 png_file := vpng.read("image.png") or { return }
-vpng.write(png_file, "output.png")
+png_file.write("output.png")
 ```
 
 <br/>
@@ -40,8 +40,8 @@ match pixel {
 ## Methods
 | Method | use |
 |-|-|
-| `.read(filename string) ?PngFile` | Parses the given `filename` png file and returns an optional `PngFile`. |
-| `.write(png PngFile, filename string)` | Writes the given `PngFile` in the `filename` png file.
+| `read(filename string) ?PngFile` | Parses the given `filename` png file and returns an optional `PngFile`. |
+| `(PngFile).write(filename string)` | Writes the given `PngFile` in the `filename` png file.
 
 <br/>
 
@@ -141,6 +141,8 @@ match pixel {
     - [ ] Indexed
     - [ ] Grayscale
     - [ ] GrayscaleAlpha
+    - [x] TrueColor
+    - [x] TrueColorAlpha
 - [ ] Functions to easily manipulate the pixels / image, for example :
     - [ ] Resize
     - [ ] Rotate

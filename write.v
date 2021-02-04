@@ -6,7 +6,9 @@ fn write_(png PngFile, filename string) {
 	mut file_bytes := []byte{}
 	signature(mut file_bytes)
 	write_chunks(mut file_bytes, png)
-	os.write_file(filename, file_bytes.bytestr())
+	os.write_file(filename, file_bytes.bytestr()) or {
+		println('Error writing file $err')
+	}
 }
 
 fn signature(mut file_bytes []byte) {
