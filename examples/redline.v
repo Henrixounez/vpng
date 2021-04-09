@@ -15,12 +15,29 @@ fn main() {
 	mut png := vpng.read(os.args[1]) or {
 		return
 	}
-	for i in 0..png.width {
-		png.pixels[i * png.width + i] = vpng.TrueColorAlpha {
-			255,
-			0,
-			0,
-			255
+	mut min := png.width
+	if png.height < png.width {
+		min = png.height
+	}
+	for i in 0..min {
+		pos := i * png.width + i
+		match png.pixel_type {
+			.truecolor {
+				png.pixels[pos] = vpng.TrueColor {
+					255,
+					0,
+					0,
+				}
+			}
+			.truecoloralpha {
+				png.pixels[pos] = vpng.TrueColorAlpha {
+					255,
+					0,
+					0,
+					255
+				}
+			}
+			else{}
 		}
 	}
 	png.write(os.args[2])

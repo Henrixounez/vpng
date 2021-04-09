@@ -12,7 +12,7 @@ fn write_(png PngFile, filename string) {
 }
 
 fn signature(mut file_bytes []byte) {
-	(*file_bytes) << [byte(0x89), `P`, `N`, `G`, `\r`, `\n`, 0x1a, `\n`]
+	file_bytes << [byte(0x89), `P`, `N`, `G`, `\r`, `\n`, 0x1a, `\n`]
 }
 
 fn ihdr_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
@@ -26,16 +26,16 @@ fn ihdr_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
 	ihdr_bytes << png.ihdr.interlace_method // Interlace Method
 	len_bytes := int_to_bytes(ihdr_bytes.len - 4)
 	crc_bytes := int_to_bytes(int(cs.crc(ihdr_bytes, ihdr_bytes.len)))
-	(*file_bytes) << len_bytes
-	(*file_bytes) << ihdr_bytes
-	(*file_bytes) << crc_bytes
+	file_bytes << len_bytes
+	file_bytes << ihdr_bytes
+	file_bytes << crc_bytes
 }
 
 fn iend_chunk(mut file_bytes []byte, mut cs CRC) {
 	iend_bytes := [byte(`I`), `E`, `N`, `D`]
-	(*file_bytes) << int_to_bytes(0)
-	(*file_bytes) << iend_bytes
-	(*file_bytes) << int_to_bytes(int(cs.crc(iend_bytes, iend_bytes.len)))
+	file_bytes << int_to_bytes(0)
+	file_bytes << iend_bytes
+	file_bytes << int_to_bytes(int(cs.crc(iend_bytes, iend_bytes.len)))
 }
 
 fn idat_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
@@ -91,9 +91,9 @@ fn idat_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
 			out_bytes << byte(out[i])
 		}
 	}
-	(*file_bytes) << int_to_bytes(out_bytes.len - 4)
-	(*file_bytes) << out_bytes
-	(*file_bytes) << int_to_bytes(int(cs.crc(out_bytes, out_bytes.len)))
+	file_bytes << int_to_bytes(out_bytes.len - 4)
+	file_bytes << out_bytes
+	file_bytes << int_to_bytes(int(cs.crc(out_bytes, out_bytes.len)))
 }
 
 fn write_chunks(mut file_bytes []byte, png PngFile) {

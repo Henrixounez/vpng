@@ -14,17 +14,17 @@ struct C.z_stream_s {
 	opaque    voidptr
 }
 
-fn C.inflateInit(&C.z_stream)
+fn C.inflateInit(&C.z_stream_s)
 
-fn C.inflate(&C.z_stream, int)
+fn C.inflate(&C.z_stream_s, int)
 
-fn C.inflateEnd(&C.z_stream)
+fn C.inflateEnd(&C.z_stream_s)
 
-fn C.deflateInit(&C.z_stream, int)
+fn C.deflateInit(&C.z_stream_s, int)
 
-fn C.deflate(&C.z_stream, int)
+fn C.deflate(&C.z_stream_s, int)
 
-fn C.deflateEnd(&C.z_stream)
+fn C.deflateEnd(&C.z_stream_s)
 
 
 // ****

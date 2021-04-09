@@ -73,10 +73,10 @@ fn rotate_(mut png PngFile, degree f64) {
 
 				match png.pixel_type {
 					.truecolor {
-						clr_top_left := png.pixels[i_floor_y * png.width + i_floor_x] as TrueColor
-						clr_top_right := png.pixels[i_floor_y * png.width + i_ceiling_x] as TrueColor
-						clr_bottom_left := png.pixels[i_ceiling_y * png.width + i_floor_x] as TrueColor
-						clr_bottom_right := png.pixels[i_ceiling_y * png.width + i_ceiling_x] as TrueColor
+						clr_top_left := png.pixels[int(i_floor_y * png.width + i_floor_x)] as TrueColor
+						clr_top_right := png.pixels[int(i_floor_y * png.width + i_ceiling_x)] as TrueColor
+						clr_bottom_left := png.pixels[int(i_ceiling_y * png.width + i_floor_x)] as TrueColor
+						clr_bottom_right := png.pixels[int(i_ceiling_y * png.width + i_ceiling_x)] as TrueColor
 
 						f_top := TrueColor {
 							red: byte((1 - f_delta_x) * clr_top_left.red + f_delta_x * clr_top_right.red)
@@ -95,10 +95,10 @@ fn rotate_(mut png PngFile, degree f64) {
 						}
 					}
 					.truecoloralpha {
-						clr_top_left := png.pixels[i_floor_y * png.width + i_floor_x] as TrueColorAlpha
-						clr_top_right := png.pixels[i_floor_y * png.width + i_ceiling_x] as TrueColorAlpha
-						clr_bottom_left := png.pixels[i_ceiling_y * png.width + i_floor_x] as TrueColorAlpha
-						clr_bottom_right := png.pixels[i_ceiling_y * png.width + i_ceiling_x] as TrueColorAlpha
+						clr_top_left := png.pixels[int(i_floor_y * png.width + i_floor_x)] as TrueColorAlpha
+						clr_top_right := png.pixels[int(i_floor_y * png.width + i_ceiling_x)] as TrueColorAlpha
+						clr_bottom_left := png.pixels[int(i_ceiling_y * png.width + i_floor_x)] as TrueColorAlpha
+						clr_bottom_right := png.pixels[int(i_ceiling_y * png.width + i_ceiling_x)] as TrueColorAlpha
 
 						f_top := TrueColorAlpha {
 							red: byte((1 - f_delta_x) * clr_top_left.red + f_delta_x * clr_top_right.red)
