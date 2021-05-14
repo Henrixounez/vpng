@@ -42,9 +42,7 @@ fn parse_(filename string) ?PngFile {
 }
 
 fn read_signature(signature []byte) ?bool {
-	is_good := signature[0] == 0x89 &&
-		signature[1] == `P` && signature[2] == `N` && signature[3] == `G` && signature[4] == `\r` &&
-		signature[5] == `\n` && signature[6] == 0x1a && signature[7] == `\n`
+	is_good := signature == png_signature
 	if !is_good {
 		println('Wrong PNG signature')
 		return none

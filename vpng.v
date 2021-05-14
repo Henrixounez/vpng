@@ -1,5 +1,7 @@
 module vpng
 
+const png_signature = [byte(0x89), 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]
+
 pub fn read(filename string) ?PngFile {
 	return parse_(filename)
 }
