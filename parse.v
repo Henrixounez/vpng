@@ -135,6 +135,9 @@ fn read_bytes(mut png InternalPngFile) []Pixel {
 	for index := 0; index < png.unfiltered_bytes.len; index += png.channels {
 		match png.ihdr.color_type {
 			3 { // Indexed
+				res << Indexed{
+					index: png.unfiltered_bytes[index]
+				}
 			}
 			0 { // Grayscale
 			}
