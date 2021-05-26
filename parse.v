@@ -10,10 +10,10 @@ fn parse_(filename string) ?PngFile {
 	for i, b in file {
 		file_bytes[i] = byte(b)
 	}
-	read_signature(subarray(file_bytes, 0, 8)) or {
+	read_signature(file_bytes[ .. 8]) or {
 		return none
 	}
-	mut png := read_chunks(subarray(file_bytes, 8, file_bytes.len))
+	mut png := read_chunks(file_bytes[8 .. ])
 	png.channels = match png.ihdr.color_type {
 		3 { 1 } // Indexed
 		0 { 1 } // Grayscale
@@ -52,8 +52,8 @@ fn read_signature(signature []byte) ?bool {
 
 fn read_ihdr(chunk_data []byte) IHDR {
 	return IHDR{
-		width: byte_to_int(subarray(chunk_data, 0, 4))
-		height: byte_to_int(subarray(chunk_data, 4, 8))
+		width: byte_to_int(chunk_data[ .. 4])
+		height: byte_to_int(chunk_data[4 .. 8])
 		bit_depth: chunk_data[8]
 		color_type: chunk_data[9]
 		compression_method: chunk_data[10]
@@ -163,14 +163,14 @@ fn read_chunks(file []byte) InternalPngFile {
 	mut index := 0
 	mut png := InternalPngFile{}
 	for index < file.len {
-		chunk_size := byte_to_int(subarray(file, index, index + 4))
+		chunk_size := byte_to_int(file[index .. index + 4])
 		index += 4
-		name := [file[index], file[index + 1], file[index + 2], file[index + 3]].bytestr()
+		name := file[index .. index + 4].bytestr()
 		if name == 'IEND' {
 			break
 		}
 		index += 4
-		chunk_data := subarray(file, index, index + chunk_size)
+		chunk_data := file[index .. index + chunk_size]
 		match name {
 			'IEND' {
 				break
