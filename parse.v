@@ -32,12 +32,21 @@ fn parse_(filename string) ?PngFile {
 	}
 	png.raw_bytes = decompress_idat(png)
 	png.pixels = read_bytes(mut png)
+	mut plte := []TrueColor{}
+	for i := 0; i < png.plte.len; i += 3 {
+		plte << TrueColor {
+			red: png.plte[i]
+			green: png.plte[i + 1]
+			blue: png.plte[i + 2]
+		}
+	}
 	return PngFile{
 		width: png.ihdr.width
 		height: png.ihdr.height
 		pixels: png.pixels
 		pixel_type: png.pixel_type
 		ihdr: png.ihdr
+		palette: plte
 	}
 }
 
@@ -180,6 +189,9 @@ fn read_chunks(file []byte) InternalPngFile {
 			}
 			'IHDR' {
 				png.ihdr = read_ihdr(chunk_data)
+			}
+			'PLTE' {
+				png.plte << chunk_data
 			}
 			'IDAT' {
 				png.idat_chunks << chunk_data
