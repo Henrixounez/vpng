@@ -12,7 +12,7 @@ fn write_(png PngFile, filename string) {
 }
 
 fn signature(mut file_bytes []byte) {
-	file_bytes << [byte(0x89), `P`, `N`, `G`, `\r`, `\n`, 0x1a, `\n`]
+	file_bytes << png_signature
 }
 
 fn ihdr_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
