@@ -56,6 +56,9 @@ fn idat_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
 					idat_bytes << pix.blue
 					idat_bytes << pix.alpha
 				}
+				Indexed {
+					idat_bytes << pix.index
+				}
 				else {}
 			}
 		}
@@ -96,9 +99,25 @@ fn idat_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
 	file_bytes << int_to_bytes(int(cs.crc(out_bytes, out_bytes.len)))
 }
 
+fn plte_chunk(mut file_bytes []byte, mut cs CRC, png PngFile) {
+	if png.pixel_type != PixelType.indexed {
+		return
+	}
+	mut out_bytes := [byte(`P`), `L`, `T`, `E`]
+	for i in 0 .. png.palette.len {
+		out_bytes << [png.palette[i].red]
+		out_bytes << [png.palette[i].green]
+		out_bytes << [png.palette[i].blue]
+	}
+	file_bytes << int_to_bytes(out_bytes.len - 4)
+	file_bytes << out_bytes
+	file_bytes << int_to_bytes(int(cs.crc(out_bytes, out_bytes.len)))
+}
+
 fn write_chunks(mut file_bytes []byte, png PngFile) {
 	mut cs := CRC{}
 	ihdr_chunk(mut file_bytes, mut cs, png)
+	plte_chunk(mut file_bytes, mut cs, png)
 	idat_chunk(mut file_bytes, mut cs, png)
 	iend_chunk(mut file_bytes, mut cs)
 }

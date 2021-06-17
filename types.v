@@ -45,6 +45,7 @@ pub:
 	height     int
 	pixel_type PixelType
 pub mut:
+	palette    []TrueColor
 	pixels     []Pixel
 }
 
@@ -56,6 +57,7 @@ mut:
 	idat_chunks      []byte
 	raw_bytes        []byte
 	unfiltered_bytes []byte
+	plte             []byte
 	pixels           []Pixel
 	pixel_type       PixelType
 }
