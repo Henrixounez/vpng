@@ -138,7 +138,7 @@ match pixel {
 
 ## Todo :
 - [ ] Handle all types of colors
-    - [ ] Indexed
+    - [x] Indexed
     - [ ] Grayscale
     - [ ] GrayscaleAlpha
     - [x] TrueColor
@@ -158,3 +158,4 @@ match pixel {
     - [ ] Filter pixels lines
     - [ ] Group IDAT in chunks
     - [ ] Save metadata
+ 
