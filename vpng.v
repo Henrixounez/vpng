@@ -20,3 +20,6 @@ pub fn (mut png PngFile)mirror_horizontal() {
 pub fn (mut png PngFile)invert() {
 	invert_(mut png)
 }
+pub fn (mut png PngFile)zoom(scale int) {
+	zoom_(mut png, scale)
+}

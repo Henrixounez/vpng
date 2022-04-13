@@ -147,7 +147,7 @@ match pixel {
     - [ ] Resize
     - [x] Mirror
     - [x] Rotate
-    - [ ] Zoom
+    - [x] Zoom
     - [ ] Slide
     - [ ] Crop
     - [x] Invert colors
