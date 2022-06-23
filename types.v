@@ -53,11 +53,11 @@ struct InternalPngFile {
 mut:
 	ihdr             IHDR
 	stride           int
-	channels         byte
-	idat_chunks      []byte
-	raw_bytes        []byte
-	unfiltered_bytes []byte
-	plte             []byte
+	channels         u8
+	idat_chunks      []u8
+	raw_bytes        []u8
+	unfiltered_bytes []u8
+	plte             []u8
 	pixels           []Pixel
 	pixel_type       PixelType
 }
@@ -66,40 +66,40 @@ pub struct IHDR {
 mut:
 	width              int
 	height             int
-	bit_depth          byte
-	color_type         byte
-	compression_method byte
-	filter_method      byte
-	interlace_method   byte
+	bit_depth          u8
+	color_type         u8
+	compression_method u8
+	filter_method      u8
+	interlace_method   u8
 }
 
 pub struct Indexed {
 pub mut:
-	index byte
+	index u8
 }
 
 pub struct Grayscale {
 pub mut:
-	gray byte
+	gray u8
 }
 
 pub struct GrayscaleAlpha {
 pub mut:
-	gray  byte
-	alpha byte
+	gray  u8
+	alpha u8
 }
 
 pub struct TrueColor {
 pub mut:
-	red   byte
-	green byte
-	blue  byte
+	red   u8
+	green u8
+	blue  u8
 }
 
 pub struct TrueColorAlpha {
 pub mut:
-	red   byte
-	green byte
-	blue  byte
-	alpha byte
+	red   u8
+	green u8
+	blue  u8
+	alpha u8
 }

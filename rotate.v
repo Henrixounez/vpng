@@ -2,7 +2,7 @@ module vpng
 
 import math
 
-fn normalize_value(val byte) byte {
+fn normalize_value(val u8) u8 {
 	if val < 0 {
 		return 0
 	} else if val > 255 {
@@ -79,19 +79,19 @@ fn rotate_(mut png PngFile, degree f64) {
 						clr_bottom_right := png.pixels[int(i_ceiling_y * png.width + i_ceiling_x)] as TrueColor
 
 						f_top := TrueColor {
-							red: byte((1 - f_delta_x) * clr_top_left.red + f_delta_x * clr_top_right.red)
-							green: byte((1 - f_delta_x) * clr_top_left.green + f_delta_x * clr_top_right.green)
-							blue: byte((1 - f_delta_x) * clr_top_left.blue + f_delta_x * clr_top_right.blue)
+							red: u8((1 - f_delta_x) * clr_top_left.red + f_delta_x * clr_top_right.red)
+							green: u8((1 - f_delta_x) * clr_top_left.green + f_delta_x * clr_top_right.green)
+							blue: u8((1 - f_delta_x) * clr_top_left.blue + f_delta_x * clr_top_right.blue)
 						}
 						f_bottom := TrueColor {
-							red: byte((1 - f_delta_x) * clr_bottom_left.red + f_delta_x * clr_bottom_right.red)
-							green: byte((1 - f_delta_x) * clr_bottom_left.green + f_delta_x * clr_bottom_right.green)
-							blue: byte((1 - f_delta_x) * clr_bottom_left.blue + f_delta_x * clr_bottom_right.blue)
+							red: u8((1 - f_delta_x) * clr_bottom_left.red + f_delta_x * clr_bottom_right.red)
+							green: u8((1 - f_delta_x) * clr_bottom_left.green + f_delta_x * clr_bottom_right.green)
+							blue: u8((1 - f_delta_x) * clr_bottom_left.blue + f_delta_x * clr_bottom_right.blue)
 						}
 						output << TrueColor {
-							red: normalize_value(byte((1 - f_delta_y) * f_top.red + f_delta_y * f_bottom.red))
-							green: normalize_value(byte((1 - f_delta_y) * f_top.green + f_delta_y * f_bottom.green))
-							blue: normalize_value(byte((1 - f_delta_y) * f_top.blue + f_delta_y * f_bottom.blue))
+							red: normalize_value(u8((1 - f_delta_y) * f_top.red + f_delta_y * f_bottom.red))
+							green: normalize_value(u8((1 - f_delta_y) * f_top.green + f_delta_y * f_bottom.green))
+							blue: normalize_value(u8((1 - f_delta_y) * f_top.blue + f_delta_y * f_bottom.blue))
 						}
 					}
 					.truecoloralpha {
@@ -101,22 +101,22 @@ fn rotate_(mut png PngFile, degree f64) {
 						clr_bottom_right := png.pixels[int(i_ceiling_y * png.width + i_ceiling_x)] as TrueColorAlpha
 
 						f_top := TrueColorAlpha {
-							red: byte((1 - f_delta_x) * clr_top_left.red + f_delta_x * clr_top_right.red)
-							green: byte((1 - f_delta_x) * clr_top_left.green + f_delta_x * clr_top_right.green)
-							blue: byte((1 - f_delta_x) * clr_top_left.blue + f_delta_x * clr_top_right.blue)
-							alpha: byte((1 - f_delta_x) * clr_top_left.alpha + f_delta_x * clr_top_right.alpha)
+							red: u8((1 - f_delta_x) * clr_top_left.red + f_delta_x * clr_top_right.red)
+							green: u8((1 - f_delta_x) * clr_top_left.green + f_delta_x * clr_top_right.green)
+							blue: u8((1 - f_delta_x) * clr_top_left.blue + f_delta_x * clr_top_right.blue)
+							alpha: u8((1 - f_delta_x) * clr_top_left.alpha + f_delta_x * clr_top_right.alpha)
 						}
 						f_bottom := TrueColorAlpha {
-							red: byte((1 - f_delta_x) * clr_bottom_left.red + f_delta_x * clr_bottom_right.red)
-							green: byte((1 - f_delta_x) * clr_bottom_left.green + f_delta_x * clr_bottom_right.green)
-							blue: byte((1 - f_delta_x) * clr_bottom_left.blue + f_delta_x * clr_bottom_right.blue)
-							alpha: byte((1 - f_delta_x) * clr_bottom_left.alpha + f_delta_x * clr_bottom_right.alpha)
+							red: u8((1 - f_delta_x) * clr_bottom_left.red + f_delta_x * clr_bottom_right.red)
+							green: u8((1 - f_delta_x) * clr_bottom_left.green + f_delta_x * clr_bottom_right.green)
+							blue: u8((1 - f_delta_x) * clr_bottom_left.blue + f_delta_x * clr_bottom_right.blue)
+							alpha: u8((1 - f_delta_x) * clr_bottom_left.alpha + f_delta_x * clr_bottom_right.alpha)
 						}
 						output << TrueColorAlpha {
-							red: normalize_value(byte((1 - f_delta_y) * f_top.red + f_delta_y * f_bottom.red))
-							green: normalize_value(byte((1 - f_delta_y) * f_top.green + f_delta_y * f_bottom.green))
-							blue: normalize_value(byte((1 - f_delta_y) * f_top.blue + f_delta_y * f_bottom.blue))
-							alpha: normalize_value(byte((1 - f_delta_y) * f_top.alpha + f_delta_y * f_bottom.alpha))
+							red: normalize_value(u8((1 - f_delta_y) * f_top.red + f_delta_y * f_bottom.red))
+							green: normalize_value(u8((1 - f_delta_y) * f_top.green + f_delta_y * f_bottom.green))
+							blue: normalize_value(u8((1 - f_delta_y) * f_top.blue + f_delta_y * f_bottom.blue))
+							alpha: normalize_value(u8((1 - f_delta_y) * f_top.alpha + f_delta_y * f_bottom.alpha))
 						}
 					}
 					else {

@@ -27,7 +27,7 @@ fn (mut cs CRC)make_crc_table() {
 	cs.crc_table_computed = 1
 }
 
-fn (mut cs CRC)update_crc(crc u64, buf []byte, len int) u64 {
+fn (mut cs CRC)update_crc(crc u64, buf []u8, len int) u64 {
 	mut c := u64(crc)
 	mut n := int(0)
 
@@ -40,6 +40,6 @@ fn (mut cs CRC)update_crc(crc u64, buf []byte, len int) u64 {
 	return c
 }
 
-pub fn (mut cs CRC)crc(buf []byte, len int) u64 {
+pub fn (mut cs CRC)crc(buf []u8, len int) u64 {
 	return cs.update_crc(u64(0xffffffff), buf, len) ^ u64(0xffffffff)
 }
