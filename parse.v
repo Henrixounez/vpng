@@ -3,12 +3,8 @@ module vpng
 import os
 
 fn parse_(filename string) ?PngFile {
-	file := os.read_file(filename) or {
-		return none
-	}
-	mut file_bytes := []byte{len: file.len}
-	for i, b in file {
-		file_bytes[i] = byte(b)
+	file_bytes := os.read_bytes(filename) or {
+		return err
 	}
 	read_signature(file_bytes[ .. 8]) or {
 		return none
@@ -50,16 +46,17 @@ fn parse_(filename string) ?PngFile {
 	}
 }
 
-fn read_signature(signature []byte) ?bool {
+fn read_signature(signature []u8) ?bool {
 	is_good := signature == png_signature
-	if !is_good {
+	return if !is_good {
 		println('Wrong PNG signature')
-		return none
+		none
+	} else {
+		true
 	}
-	return true
 }
 
-fn read_ihdr(chunk_data []byte) IHDR {
+fn read_ihdr(chunk_data []u8) IHDR {
 	return IHDR{
 		width: byte_to_int(chunk_data[ .. 4])
 		height: byte_to_int(chunk_data[4 .. 8])
@@ -72,34 +69,34 @@ fn read_ihdr(chunk_data []byte) IHDR {
 }
 
 fn byte_a(r int, c int, png InternalPngFile) int {
-	if c >= png.channels {
-		return png.unfiltered_bytes[r * png.stride + c - png.channels]
+	return if c >= png.channels {
+		png.unfiltered_bytes[r * png.stride + c - png.channels]
 	} else {
-		return 0
+		0
 	}
 }
 
 fn byte_b(r int, c int, png InternalPngFile) int {
-	if r > 0 {
-		return png.unfiltered_bytes[(r - 1) * png.stride + c]
+	return if r > 0 {
+		png.unfiltered_bytes[(r - 1) * png.stride + c]
 	} else {
-		return 0
+		0
 	}
 }
 
 fn byte_c(r int, c int, png InternalPngFile) int {
-	if r > 0 && c >= png.channels {
-		return png.unfiltered_bytes[(r - 1) * png.stride + c - png.channels]
+	return if r > 0 && c >= png.channels {
+		png.unfiltered_bytes[(r - 1) * png.stride + c - png.channels]
 	} else {
-		return 0
+		0
 	}
 }
 
 fn abs(val int) int {
-	if val < 0 {
-		return -val
+	return if val < 0 {
+		-val
 	} else {
-		return val
+		val
 	}
 }
 
@@ -109,16 +106,17 @@ fn paeth(a int, b int, c int) int {
 	pb := abs(p - b)
 	pc := abs(p - c)
 	mut pr := 0
-	if pa <= pb && pa <= pc {
-		pr = a
+	pr = if pa <= pb && pa <= pc {
+		a
 	} else if pb <= pc {
-		pr = b
+		b
 	} else {
-		pr = c
+		c
 	}
 	return pr
 }
 
+[direct_array_access]
 fn read_bytes(mut png InternalPngFile) []Pixel {
 	png.stride = png.ihdr.width * png.channels
 	mut i := 0
@@ -135,7 +133,7 @@ fn read_bytes(mut png InternalPngFile) []Pixel {
 				3 { filt + (byte_a(r, c, png) + byte_b(r, c, png)) / 2 }
 				else { filt + paeth(byte_a(r, c, png), byte_b(r, c, png), byte_c(r, c, png)) }
 			}
-			png.unfiltered_bytes << byte(new_byte & 0xff)
+			png.unfiltered_bytes << u8(new_byte & 0xff)
 		}
 	}
 	mut res := []Pixel{}
@@ -171,7 +169,7 @@ fn read_bytes(mut png InternalPngFile) []Pixel {
 	return res
 }
 
-fn read_chunks(file []byte) InternalPngFile {
+fn read_chunks(file []u8) InternalPngFile {
 	mut index := 0
 	mut png := InternalPngFile{}
 	for index < file.len {
@@ -205,7 +203,8 @@ fn read_chunks(file []byte) InternalPngFile {
 	return png
 }
 
-fn decompress_idat(png InternalPngFile) []byte {
+[direct_array_access]
+fn decompress_idat(png InternalPngFile) []u8 {
 	out_len := (png.ihdr.width * png.ihdr.height) * png.channels + png.ihdr.height
 	out := unsafe {malloc(out_len)}
 	infstream := C.z_stream_s{
@@ -220,10 +219,10 @@ fn decompress_idat(png InternalPngFile) []byte {
 	C.inflateInit(&infstream)
 	C.inflate(&infstream, 0)
 	C.inflateEnd(&infstream)
-	mut out_bytes := []byte{len: out_len}
+	mut out_bytes := []u8{len: out_len}
 	for i in 0 .. (out_len) {
 		unsafe {
-			out_bytes[i] = byte(out[i])
+			out_bytes[i] = u8(out[i])
 		}
 	}
 	return out_bytes
