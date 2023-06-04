@@ -1,6 +1,7 @@
 module vpng
 
 import os
+import compress.zlib
 
 fn write_(png PngFile, filename string) {
 	mut file_bytes := []u8{}
@@ -64,36 +65,11 @@ fn idat_chunk(mut file_bytes []u8, mut cs CRC, png PngFile) {
 		}
 	}
 
-	out_len := idat_bytes.len + idat_bytes.len * 2
-	out := unsafe {malloc(out_len)}
-	defstream := C.z_stream_s{
-		zalloc: 0
-		zfree: 0
-		opaque: 0
-		avail_in: u32(idat_bytes.len)
-		next_in: idat_bytes.bytestr().str
-		avail_out: u32(out_len)
-		next_out: out
+	out := zlib.compress(idat_bytes) or {
+		panic('failed to compress IDAT chunks')
 	}
-	C.deflateInit(&defstream, 9)
-	C.deflate(&defstream, 4)
-	C.deflateEnd(&defstream)
 	mut out_bytes := [u8(`I`), `D`, `A`, `T`]
-	mut max := 0
-	for i := out_len; i > 0; i-- {
-		unsafe {
-			if int(out[i]) != 0 {
-				max = i + 1
-				max += 4 - (max % 3)
-				break
-			}
-		}
-	}
-	for i in 0 .. (max) {
-		unsafe {
-			out_bytes << u8(out[i])
-		}
-	}
+	out_bytes << out
 	file_bytes << int_to_bytes(out_bytes.len - 4)
 	file_bytes << out_bytes
 	file_bytes << int_to_bytes(int(cs.crc(out_bytes, out_bytes.len)))
