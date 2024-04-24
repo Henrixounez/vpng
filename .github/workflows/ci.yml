@@ -1,0 +1,32 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  ubuntu-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Latest V
+        uses: actions/checkout@v4
+        with:
+          repository: vlang/v
+          path: v
+      - name: Build V
+        run: cd v && make && ./v symlink
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Symlink to ~/.vmodules/vpng
+        run: ln -s $(realpath .) ~/.vmodules/vpng
+
+      - name: Ensure code is formatted
+        run: v fmt -verify .
+
+      - name: Run tests
+        run: v test .
+
+      - name: Ensure examples compile
+        run: v should-compile-all examples/
+
+      - name: Print V logo
+        run: v run examples/png-printer.v examples/v-logo-small.png
