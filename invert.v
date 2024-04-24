@@ -1,7 +1,7 @@
 module vpng
 
 fn invert_(mut png PngFile) {
-	for i in 0..(png.pixels.len) {
+	for i in 0 .. (png.pixels.len) {
 		pix := png.pixels[i]
 		match pix {
 			TrueColor {

@@ -3,7 +3,7 @@ module vpng
 fn byte_to_int(bytes []u8) int {
 	mut res := 0
 	for i in 0 .. bytes.len {
-		res += bytes[bytes.len - (i + 1)] << ((i) * 8)
+		res += bytes[bytes.len - (i + 1)] << (i * 8)
 	}
 	return res
 }

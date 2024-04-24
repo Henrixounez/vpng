@@ -6,9 +6,7 @@ fn write_(png PngFile, filename string) {
 	mut file_bytes := []u8{}
 	signature(mut file_bytes)
 	write_chunks(mut file_bytes, png)
-	os.write_file(filename, file_bytes.bytestr()) or {
-		println('Error writing file $err')
-	}
+	os.write_file(filename, file_bytes.bytestr()) or { println('Error writing file ${err}') }
 }
 
 fn signature(mut file_bytes []u8) {
@@ -40,9 +38,9 @@ fn iend_chunk(mut file_bytes []u8, mut cs CRC) {
 
 fn idat_chunk(mut file_bytes []u8, mut cs CRC, png PngFile) {
 	mut idat_bytes := []u8{}
-	for y in 0..png.height {
+	for y in 0 .. png.height {
 		idat_bytes << 0
-		for x in 0..png.width {
+		for x in 0 .. png.width {
 			pix := png.pixels[y * png.width + x]
 			match pix {
 				TrueColor {
@@ -65,7 +63,7 @@ fn idat_chunk(mut file_bytes []u8, mut cs CRC, png PngFile) {
 	}
 
 	out_len := idat_bytes.len + idat_bytes.len * 2
-	out := unsafe {malloc(out_len)}
+	out := unsafe { malloc(out_len) }
 	defstream := C.z_stream_s{
 		zalloc: 0
 		zfree: 0
@@ -89,7 +87,7 @@ fn idat_chunk(mut file_bytes []u8, mut cs CRC, png PngFile) {
 			}
 		}
 	}
-	for i in 0 .. (max) {
+	for i in 0 .. max {
 		unsafe {
 			out_bytes << u8(out[i])
 		}

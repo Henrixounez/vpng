@@ -4,11 +4,11 @@ module vpng
 
 pub struct CRC {
 mut:
-	crc_table []u64 = []u64{len: 256}
+	crc_table          []u64 = []u64{len: 256}
 	crc_table_computed int
 }
 
-fn (mut cs CRC)make_crc_table() {
+fn (mut cs CRC) make_crc_table() {
 	mut c := u64(0)
 	mut n := int(0)
 	mut k := int(0)
@@ -17,7 +17,7 @@ fn (mut cs CRC)make_crc_table() {
 		c = u64(n)
 		for k = 0; k < 8; k++ {
 			if c & 1 != 0 {
-				c = /**/u64(i64(0xedb88320) ^ /**/i64(c >> 1))
+				c = u64(i64(0xedb88320) ^ i64(c >> 1))
 			} else {
 				c = c >> 1
 			}
@@ -27,7 +27,7 @@ fn (mut cs CRC)make_crc_table() {
 	cs.crc_table_computed = 1
 }
 
-fn (mut cs CRC)update_crc(crc u64, buf []u8, len int) u64 {
+fn (mut cs CRC) update_crc(crc u64, buf []u8, len int) u64 {
 	mut c := u64(crc)
 	mut n := int(0)
 
@@ -40,6 +40,6 @@ fn (mut cs CRC)update_crc(crc u64, buf []u8, len int) u64 {
 	return c
 }
 
-pub fn (mut cs CRC)crc(buf []u8, len int) u64 {
+pub fn (mut cs CRC) crc(buf []u8, len int) u64 {
 	return cs.update_crc(u64(0xffffffff), buf, len) ^ u64(0xffffffff)
 }
