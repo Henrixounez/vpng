@@ -2,14 +2,10 @@ module vpng
 
 import os
 
-fn parse_(filename string) ?PngFile {
-	file_bytes := os.read_bytes(filename) or {
-		return err
-	}
-	read_signature(file_bytes[ .. 8]) or {
-		return none
-	}
-	mut png := read_chunks(file_bytes[8 .. ])
+fn parse_(filename string) !PngFile {
+	file_bytes := os.read_bytes(filename) or { return err }
+	read_signature(file_bytes[..8]) or { return err }
+	mut png := read_chunks(file_bytes[8..])
 	png.channels = match png.ihdr.color_type {
 		3 { 1 } // Indexed
 		0 { 1 } // Grayscale
@@ -30,7 +26,7 @@ fn parse_(filename string) ?PngFile {
 	png.pixels = read_bytes(mut png)
 	mut plte := []TrueColor{}
 	for i := 0; i < png.plte.len; i += 3 {
-		plte << TrueColor {
+		plte << TrueColor{
 			red: png.plte[i]
 			green: png.plte[i + 1]
 			blue: png.plte[i + 2]
@@ -46,20 +42,18 @@ fn parse_(filename string) ?PngFile {
 	}
 }
 
-fn read_signature(signature []u8) ?bool {
+fn read_signature(signature []u8) !bool {
 	is_good := signature == png_signature
-	return if !is_good {
-		println('Wrong PNG signature')
-		none
-	} else {
-		true
+	if !is_good {
+		return error('Wrong PNG signature')
 	}
+	return true
 }
 
 fn read_ihdr(chunk_data []u8) IHDR {
 	return IHDR{
-		width: byte_to_int(chunk_data[ .. 4])
-		height: byte_to_int(chunk_data[4 .. 8])
+		width: byte_to_int(chunk_data[..4])
+		height: byte_to_int(chunk_data[4..8])
 		bit_depth: chunk_data[8]
 		color_type: chunk_data[9]
 		compression_method: chunk_data[10]
@@ -116,7 +110,7 @@ fn paeth(a int, b int, c int) int {
 	return pr
 }
 
-[direct_array_access]
+@[direct_array_access]
 fn read_bytes(mut png InternalPngFile) []Pixel {
 	png.stride = png.ihdr.width * png.channels
 	mut i := 0
@@ -173,14 +167,14 @@ fn read_chunks(file []u8) InternalPngFile {
 	mut index := 0
 	mut png := InternalPngFile{}
 	for index < file.len {
-		chunk_size := byte_to_int(file[index .. index + 4])
+		chunk_size := byte_to_int(file[index..index + 4])
 		index += 4
-		name := file[index .. index + 4].bytestr()
+		name := file[index..index + 4].bytestr()
 		if name == 'IEND' {
 			break
 		}
 		index += 4
-		chunk_data := file[index .. index + chunk_size]
+		chunk_data := file[index..index + chunk_size]
 		match name {
 			'IEND' {
 				break
@@ -203,10 +197,10 @@ fn read_chunks(file []u8) InternalPngFile {
 	return png
 }
 
-[direct_array_access]
+@[direct_array_access]
 fn decompress_idat(png InternalPngFile) []u8 {
 	out_len := (png.ihdr.width * png.ihdr.height) * png.channels + png.ihdr.height
-	out := unsafe {malloc(out_len)}
+	out := unsafe { malloc(out_len) }
 	infstream := C.z_stream_s{
 		zalloc: 0
 		zfree: 0
@@ -220,7 +214,7 @@ fn decompress_idat(png InternalPngFile) []u8 {
 	C.inflate(&infstream, 0)
 	C.inflateEnd(&infstream)
 	mut out_bytes := []u8{len: out_len}
-	for i in 0 .. (out_len) {
+	for i in 0 .. out_len {
 		unsafe {
 			out_bytes[i] = u8(out[i])
 		}

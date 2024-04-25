@@ -12,7 +12,7 @@ fn pixel_print_hd(x int, y int, png vpng.PngFile) {
 		return
 	}
 	top_pixel := png.pixels[y * png.width + x]
-	mut top_str := ""
+	mut top_str := ''
 	match top_pixel {
 		vpng.TrueColor {
 			top_str = term.rgb(top_pixel.red, top_pixel.green, top_pixel.blue, '▀')
@@ -21,7 +21,7 @@ fn pixel_print_hd(x int, y int, png vpng.PngFile) {
 			top_str = term.rgb(top_pixel.red, top_pixel.green, top_pixel.blue, '▀')
 		}
 		else {
-			""
+			''
 		}
 	}
 	if y + 1 >= png.height {
@@ -29,7 +29,7 @@ fn pixel_print_hd(x int, y int, png vpng.PngFile) {
 		return
 	}
 	bot_pixel := png.pixels[(y + 1) * png.width + x]
-	mut bot_str := ""
+	mut bot_str := ''
 	match bot_pixel {
 		vpng.TrueColor {
 			bot_str = term.bg_rgb(bot_pixel.red, bot_pixel.green, bot_pixel.blue, top_str)
@@ -38,7 +38,7 @@ fn pixel_print_hd(x int, y int, png vpng.PngFile) {
 			bot_str = term.bg_rgb(bot_pixel.red, bot_pixel.green, bot_pixel.blue, top_str)
 		}
 		else {
-			""
+			''
 		}
 	}
 	print(bot_str)
@@ -47,7 +47,7 @@ fn pixel_print_hd(x int, y int, png vpng.PngFile) {
 fn hi_res_print(png vpng.PngFile) {
 	mut x := 0
 	mut y := 0
-	
+
 	for y < png.height {
 		x = 0
 		for x < png.width {
@@ -62,11 +62,9 @@ fn hi_res_print(png vpng.PngFile) {
 fn main() {
 	if os.args.len != 2 {
 		println('Missing filename')
-		return
+		exit(1)
 	}
 	filename := os.args[1]
-	png := vpng.read(filename) or {
-		return
-	}
+	png := vpng.read(filename)!
 	hi_res_print(png)
 }

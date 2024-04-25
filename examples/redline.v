@@ -10,34 +10,23 @@ fn main() {
 	if os.args.len != 3 {
 		println('Missing filename')
 		println('./redline input.png output.png')
-		return
+		exit(1)
 	}
-	mut png := vpng.read(os.args[1]) or {
-		return
-	}
+	mut png := vpng.read(os.args[1])!
 	mut min := png.width
 	if png.height < png.width {
 		min = png.height
 	}
-	for i in 0..min {
+	for i in 0 .. min {
 		pos := i * png.width + i
 		match png.pixel_type {
 			.truecolor {
-				png.pixels[pos] = vpng.TrueColor {
-					255,
-					0,
-					0,
-				}
+				png.pixels[pos] = vpng.TrueColor{255, 0, 0}
 			}
 			.truecoloralpha {
-				png.pixels[pos] = vpng.TrueColorAlpha {
-					255,
-					0,
-					0,
-					255
-				}
+				png.pixels[pos] = vpng.TrueColorAlpha{255, 0, 0, 255}
 			}
-			else{}
+			else {}
 		}
 	}
 	png.write(os.args[2])

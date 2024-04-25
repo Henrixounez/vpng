@@ -3,6 +3,7 @@ module vpng
 // * zlib bindings *
 #flag -lz
 #include <zlib.h>
+
 struct C.z_stream_s {
 	next_in   voidptr
 	avail_in  u32
@@ -26,7 +27,6 @@ fn C.deflate(&C.z_stream_s, int)
 
 fn C.deflateEnd(&C.z_stream_s)
 
-
 // ****
 pub enum PixelType {
 	indexed
@@ -39,14 +39,14 @@ pub enum PixelType {
 pub type Pixel = Grayscale | GrayscaleAlpha | Indexed | TrueColor | TrueColorAlpha
 
 pub struct PngFile {
-	ihdr       IHDR
+	ihdr IHDR
 pub:
 	width      int
 	height     int
 	pixel_type PixelType
 pub mut:
-	palette    []TrueColor
-	pixels     []Pixel
+	palette []TrueColor
+	pixels  []Pixel
 }
 
 struct InternalPngFile {
