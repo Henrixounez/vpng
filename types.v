@@ -1,33 +1,5 @@
 module vpng
 
-// * zlib bindings *
-#flag -lz
-#include <zlib.h>
-
-struct C.z_stream_s {
-	next_in   voidptr
-	avail_in  u32
-	next_out  voidptr
-	avail_out u32
-	total_out u64
-	zalloc    voidptr
-	zfree     voidptr
-	opaque    voidptr
-}
-
-fn C.inflateInit(&C.z_stream_s)
-
-fn C.inflate(&C.z_stream_s, int)
-
-fn C.inflateEnd(&C.z_stream_s)
-
-fn C.deflateInit(&C.z_stream_s, int)
-
-fn C.deflate(&C.z_stream_s, int)
-
-fn C.deflateEnd(&C.z_stream_s)
-
-// ****
 pub enum PixelType {
 	indexed
 	grayscale
