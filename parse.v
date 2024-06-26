@@ -1,6 +1,7 @@
 module vpng
 
 import os
+import compress.zlib
 
 fn parse_(filename string) !PngFile {
 	file_bytes := os.read_bytes(filename) or { return err }
@@ -197,27 +198,8 @@ fn read_chunks(file []u8) InternalPngFile {
 	return png
 }
 
-@[direct_array_access]
 fn decompress_idat(png InternalPngFile) []u8 {
-	out_len := (png.ihdr.width * png.ihdr.height) * png.channels + png.ihdr.height
-	out := unsafe { malloc(out_len) }
-	infstream := C.z_stream_s{
-		zalloc: 0
-		zfree: 0
-		opaque: 0
-		avail_in: u32(png.idat_chunks.len)
-		next_in: png.idat_chunks.bytestr().str
-		avail_out: u32(out_len)
-		next_out: out
+	return zlib.decompress(png.idat_chunks) or {
+		panic('failed to decompress IDAT chunks')
 	}
-	C.inflateInit(&infstream)
-	C.inflate(&infstream, 0)
-	C.inflateEnd(&infstream)
-	mut out_bytes := []u8{len: out_len}
-	for i in 0 .. out_len {
-		unsafe {
-			out_bytes[i] = u8(out[i])
-		}
-	}
-	return out_bytes
 }
